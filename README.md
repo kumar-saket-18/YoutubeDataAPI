@@ -16,7 +16,7 @@ An API to fetch latest videos from YouTube for a given tag/search query
 MySQL COnnection : 
     -> sudo mysql -u root
     -> CREATE USER 'youtube_search_project'@'%';
-    -> ALTER USER ''youtube_search_project'@'%' IDENTIFIED BY 'qwerty123';
+    -> ALTER USER ''youtube_search_project'@'%' IDENTIFIED BY 'qwerty123';   (### for security reasons user,password,db_name should always be read from env but here                                                                                we have directly put these values in settings.py which is not ideal.) 
     -> flush privileges
     -> GRANT ALL PRIVILEGES ON *.* TO 'youtube_search_project'@'%' WITH GRANT OPTION;
     -> create database my_project;
