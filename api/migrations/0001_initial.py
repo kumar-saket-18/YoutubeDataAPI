@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('thumbnail', models.CharField(max_length=4000)),
                 ('duration', models.IntegerField()),
                 ('filtered_title', models.CharField(max_length=10000)),
-                ('url', models.CharField(max_length=4000)),
+                ('url', models.CharField(max_length=255)),
             ],
         ),
     ]
