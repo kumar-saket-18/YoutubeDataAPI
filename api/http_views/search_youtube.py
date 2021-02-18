@@ -16,30 +16,27 @@ class YoutubeSearch(APIView):
         video_url = 'https://www.googleapis.com/youtube/v3/videos'
 
         youtube_data_api_key = self.get_random_api_key()
-        search_params = {
-            'part' : 'snippet',
-            'q' : 'cricket',
-            'key' : youtube_data_api_key,   # fetching the youtube_data_api_key randomly
-            'maxResults' : 10, # limiting the obtained resulting number of videos to 10
-        }
-
-        video_ids = []
-        resp = requests.get(search_url, params=search_params)
+        resp = self.get_response_from_api(youtube_data_api_key, search_url)
         results = resp.json()['items']
+        video_ids = []
         for  result in results:
-            video_ids.append(result['id']['videoId'])
+            try:
+                video_ids.append(result['id']['videoId'])
+            except:
+                continue # only returning those videos which have a video_id so as to redirect to that particular video is feasible.
         video_params = {
             'key' : youtube_data_api_key,
             'part' : 'snippet,contentDetails',
             'id' : ','.join(video_ids),
             'maxResults' : 10, # limiting the obtained resulting number of videos to 10
+            'order' : 'date',  # order by published date
+            'publishedAfter' : '2020-01-01T00:00:00Z'  # getting results only for after particular published date 
         }
 
         resp = requests.get(video_url, params=video_params)
         results = resp.json()['items']
 
         videos = []
-          
         import nltk
         nltk.download("stopwords")
         for result in results:
@@ -59,7 +56,6 @@ class YoutubeSearch(APIView):
             }
             videos.append(video_data)
             
-            videos.sort(key = operator.itemgetter('published_datetime'))
             new_search  = SearchHistory()
             new_search.video_id = result['id']
             new_search.video_title = result['snippet']['title']
@@ -105,3 +101,15 @@ class YoutubeSearch(APIView):
         key_list.append('AIzaSyBb-QyCWhOnsTanrtjbWVvAjb1Ryghsrmo')
         key_list.append('AIzaSyCE4_eYSRR_PGyfg96mFanAzPdSzBlN2io')
         return random.choice(key_list)
+
+    def get_response_from_api(self,youtube_data_api_key, search_url):
+        search_params = {
+            'part' : 'snippet',
+            'q' : 'ronaldo',
+            'key' : youtube_data_api_key,   # fetching the youtube_data_api_key randomly
+            'maxResults' : 10, # limiting the obtained resulting number of videos to 10
+        }
+        resp = requests.get(search_url, params=search_params)
+        if resp.status_code != 200:
+            self.get_response_from_api(self.get_random_api_key, search_url)
+        return resp
