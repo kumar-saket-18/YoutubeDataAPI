@@ -40,7 +40,8 @@ class YoutubeSearch(APIView):
 
         videos = []
           
-
+        import nltk
+        nltk.download("stopwords")
         for result in results:
             title = re.sub('\W+',' ', result['snippet']['title'])  # filtering out all the non-essential punctuations from title.
             word_list = title.split(' ')
