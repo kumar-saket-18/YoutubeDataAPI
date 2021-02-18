@@ -102,7 +102,7 @@ class YoutubeSearch(APIView):
         key_list.append('AIzaSyCE4_eYSRR_PGyfg96mFanAzPdSzBlN2io')
         return random.choice(key_list)
 
-    def get_response_from_api(self,youtube_data_api_key, search_url):
+    def get_response_from_api(self.youtube_data_api_key, search_url):
         search_params = {
             'part' : 'snippet',
             'q' : 'ronaldo',
